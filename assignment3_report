@@ -1,0 +1,49 @@
+How exactly is sychronization achieved using semaphore in our assignnment?
+    Here, we have used two semaphores, produced and consumed. Produced starts with 0. Consumer waits till the producer produces the value. Once the producer produced the value, it would be consumed by the consumer after it has been given a signal by producer to consume. After the consumer consumes it, it again signals the producer to produce next one.
+    
+Can the above sychronization be achieved with just one semphore? Why or why not?
+    Yes, it works with one semaphore.  It can be seem using the below code:
+    
+producerCount = 0
+consumerCount = 0
+sid32 semaphore = semcreate(1);
+int n = 0;
+void produce(int count)
+{
+    while( producerCount < count )
+    {
+        wait(semaphore);
+        if(producerCount == consumerCount)
+        {
+            //only produce in these cases..
+            n++;
+            kprintf("Produced: %d", n);
+            producerCount++;
+        }
+        signal(semaphore);
+    }
+}
+
+void consume(int count)
+{
+    while(consumerCount <= count)
+    {
+        wait(semaphore);
+        if( producerCount > consumerCount )
+        {
+            kprintf("Consumed: %d", n);
+            consumerCount++;
+            //only consume in this scenario..          
+            if( consumerCount == count)
+            {
+                break;
+            }
+        }
+        signal(semaphore);
+    }
+    semdelete(semaphore);
+} 
+
+
+Here, As you can see,we used onnly one semaphore. We used two variables producer count and conusmer count, which helps both producer and consumer synchronize it.
+    

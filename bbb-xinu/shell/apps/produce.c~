@@ -1,0 +1,20 @@
+#include <prodcons.h>
+#include <stdarg.h>
+sid32 produced, consumed;
+int n;
+//#include <stdio.h>
+void producer(int count)
+{
+	//Code to produce values less than equal to count, 
+	//produced value should get assigned to global variable 'n'.
+	//print produced value e.g. produced : 8
+	int i=0;
+	kprintf("Count: %d", count);
+	for(i=0; i<=count; i++)
+	{   
+	    wait(consumed);
+        kprintf("Produced: %d\n", i);
+        n = i;
+        signal(produced);
+	}
+}

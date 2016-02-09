@@ -1,0 +1,18 @@
+Implementation Details:
+This file system implementation is inspired from the implementation in Xinu. Each Inode has a array of datablocks. And file entry points to a linked list of inodes. The free mask bits are used to determine, whether a data block is free or not.
+- Initially all inode blocks are free.
+- All datablocks are free.
+
+New Inode and New Datablock allocation:
+Whenever, a new inode, is required for a file, all the inodes are scanned, to find a free inode. This inode is assigned to that file, and the inode status is updated as being used. Similarly, whenever an inode needs a new datablock, all the datablocks are scanned to find a free datablock is assigned to the inode, and the datablocks status is updated as being used, by setting the corresponding bit in the mask bits.
+
+- New Inodes and datablocks are allocated on a lazy basis, i.e., they will be allocated only when they are required.
+- Each inode has two entries to maintain the current file pointer position. (The block number, and the offset in the block).
+- Similarly, the directory entry for the file has the current inode number to get the file pointer position. (It also has the inode number of head of the inode linked list).
+
+
+Work distribution:
+
+Rahul - most of the code. (50% overall contribution)
+Manoj - code debugging, and testing. (50% overall contribution)
+ 

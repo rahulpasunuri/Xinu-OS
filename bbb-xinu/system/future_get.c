@@ -1,0 +1,63 @@
+#include<future.h>
+
+syscall future_get(future *f, int* value)
+{
+     // kprintf("Inside Future_get\n"); 
+       //  kprintf("Flag%d",f->flag); 
+    if(f->flag == FUTURE_EXCLUSIVE)
+    {
+        
+                f->pid = getpid();
+        
+        if(f->state == FUTURE_EMPTY)
+        {
+            suspend(f->pid);
+            //return SYSERR;
+        }
+        //kprintf("relesed");
+        *value = f->value;
+        f->state = FUTURE_EMPTY; //change the state back..
+    }
+    else if (f->flag == FUTURE_SHARED)
+    {
+        if(f->state == FUTURE_EMPTY) // the future is not set yet..
+        {
+            //enqueue this process..
+            enqueueFuture(&(f->get_queue), getpid());
+            //TODO:wait the process..            
+            suspend(getpid());
+        }
+        *value = f->value;
+    }
+    else if (f->flag == FUTURE_QUEUE)
+    {
+        //TODO: Incomplete functionality..
+        if(f->set_queue.size == 0)
+        {
+            //no process waiting to set the future..
+            //allocate this process to the get queue and wait..
+            enqueueFuture(&(f->get_queue), getpid());
+            //wait the current process..
+            suspend(getpid());
+        }
+        else
+        {
+            //dequeue a process from the set queue..
+            enqueueFuture(&(f->get_queue), getpid());
+            resume(dequeueFuture(&(f->set_queue)));
+            
+            while(f->state != FUTURE_VALID)
+            {
+                resched();
+            } 
+        } 
+        *value = f->value;
+        f->state = FUTURE_EMPTY; 
+    }
+    else
+    {
+        kprintf("Unsupported future state!!!");
+        return SYSERR;
+    }
+    return OK;
+}

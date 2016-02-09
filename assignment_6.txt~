@@ -1,0 +1,30 @@
+Answer to question 9.4 
+We have created two new methods to replace the getmem() and getstk() methods with the names getpermmem() and getpermstk() respectively. Each of these methods are similar to the working of the original functionalities, but no rounding off of memory is done in our implementation. So, whenever some memory is requested, the exact same amount of memory is allocated compared to the original implementations where some extra memory might be allocated. Also, we have modified the freemem() method which doesnt allow the memory to be returned to the free list. This makes sure that the memory is permanently allocated.
+
+Output of the program can be seen below:
+Below output shows 4 iterations of getpermmem() call, and 4 iterations of getpermstak() call. Note that when memory is requested, exactly 100 bytes is allocated instead of rounding off to 104 bytes. 
+
+Acquiring 100 bytes through modified getmem()
+Total Available Free Memory is: 0xfffdd89c
+
+Acquiring 100 bytes through modified getmem()
+Total Available Free Memory is: 0xfffdd838
+
+Acquiring 100 bytes through modified getmem()
+Total Available Free Memory is: 0xfffdd7d4
+
+Acquiring 100 bytes through modified getmem()
+Total Available Free Memory is: 0xfffdd770
+
+Acquiring 100 bytes through modified getstk()
+Total Available Free Memory is: 0xfffdd70c
+
+Acquiring 100 bytes through modified getstk()
+Total Available Free Memory is: 0xfffdd6a8
+
+Acquiring 100 bytes through modified getstk()
+Total Available Free Memory is: 0xfffdd644
+
+Acquiring 100 bytes through modified getstk()
+Total Available Free Memory is: 0xfffdd5e0
+

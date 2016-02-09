@@ -1,0 +1,97 @@
+/* xsh_hello.c - xsh_hello */
+
+#include <xinu.h>
+//#include <memory.h>
+#include <string.h>
+#include <stdio.h>
+//struct	memblk	memlist;	/* Head of free memory list	*/
+/*------------------------------------------------------------------------
+ * xsh_memory - Memory Program
+ *------------------------------------------------------------------------
+ */
+
+sid32 joiner;
+
+uint32 fibonacci(int count)
+{
+    if(count <= 1)
+    {
+        return 1;
+    }
+    return fibonacci(count-1)+fibonacci(count-2);
+}
+
+void fibonacci_recur(int count)
+{
+    kprintf("Fibonacci value for %d: is %d\n", count, fibonacci(count));
+    signal(joiner);
+}
+
+
+shellcmd xsh_memory(int nargs, char *args[]) {
+
+	/* Check argument count */
+    joiner = semcreate(0);
+	if (nargs > 2 || nargs == 1) {
+		fprintf(stderr, "%s: invalid no. of arguments\n", args[0]);
+		fprintf(stderr, "Try '%s --help' for more information\n",
+			args[0]);
+		return 1;
+	}
+
+	if (strncmp(args[1], "--help", 7) == 0) {
+		printf("Usage: %s\n\n", args[0]);
+		printf("Description:\n");
+		printf("\tMemory assignment\n");
+		printf("Options (one per invocation):\n");
+		printf("\tUse --free to get a list of all free memory regions.\n");
+		printf("\tUse --maxStack to check the max stack implementation.\n");
+		printf("\t--help\tdisplay this help and exit\n");
+		return 0;	
+	}
+	else if (strncmp(args[1], "--free", 7) == 0) {
+        //list of all free memory..
+        //memlist
+        
+        kprintf("Total Available Free Memory is: 0x%08x\n\n",memlist.mlength);
+        struct	memblk *currPointer = memlist.mnext;
+        while(currPointer != NULL)
+        {
+            kprintf("Address of memory Block is: 0x%08x, and Size of the block is: 0x%08x\n", currPointer, currPointer->mlength);
+            currPointer = currPointer->mnext;
+        }       
+		return 0;	
+	}
+    else if (strncmp(args[1], "--permMemory", 13) == 0) {
+        ignoreFreeMemory = 1;
+        //get Memory..
+        uint32 i=0;
+        while(i<4)
+        {
+            i++;
+            kprintf("Acquiring 100 bytes through modified getmem() \n");
+            getpermmem(100);
+            kprintf("Total Available Free Memory is: 0x%08x \n\n",memlist.mlength);
+        }
+        
+        while(i<8)
+        {
+            i++;
+            kprintf("Acquiring 100 bytes through modified getstk() \n");
+            getpermstk(100);
+            kprintf("Total Available Free Memory is: 0x%08x \n\n",memlist.mlength);
+        }
+        ignoreFreeMemory = 0;
+    }
+    else if (strncmp(args[1], "--maxStack", 11) == 0) {
+	    kprintf("Running fibonacci for count 3\n");
+	    resume( create(fibonacci_recur, 1024, 20, "fibonacci_recur", 1, 3) );
+	    int i =0;
+        wait(joiner);
+	    kprintf("Running fibonacci for count 6\n");
+	    resume( create(fibonacci_recur, 1024, 20, "fibonacci_recur", 1, 6) );	    
+	    wait(joiner);
+	    semdelete(joiner);
+    }
+	return 0;
+}

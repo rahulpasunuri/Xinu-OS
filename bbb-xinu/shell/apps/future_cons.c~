@@ -1,0 +1,17 @@
+#include<prodcons.h>
+
+uint32 future_cons(future *fut) 
+{
+  int i=0, status;
+  status = future_get(fut, &i);
+  while(status ==  SYSERR) 
+  {
+    //printf("future_get failed\n");
+    status = future_get(fut, &i);
+    //break;
+  }
+  kprintf("it produced %d\n", i);
+  return (uint32)OK;
+}
+
+

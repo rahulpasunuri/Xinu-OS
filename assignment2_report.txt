@@ -1,0 +1,123 @@
+﻿Does your program output any garbage? If yes, why? 
+	Yes, The output has some garbage in it because there is no synchronization in accessing the global variable and while printing to the console. For example, we see some output like “consumed: 999oduced: 9995”, which has jumbled output. 
+
+Are all the produced values getting consumed? Check your program for a small count like 20.
+	No. because context switch is not enforced after production, there might be instances where producer produces more than one value without a consumer getting a chance to consume it. It can be seen in the below iterations 
+
+Iteration1 :
+xsh $ prodcons 20
+48 
+ Count value being used is: 20
+Produced: 0
+#[11CProduconsumed: 0
+#[16Cconsumed: 0
+#[11Cxsh $ ced: 1
+#[23CProduced: 2consumed: 1
+#[11Cconsumed: 
+#[10CProduced: 3
+#[11CProduced: 1
+#[11Cconsumed: 3
+#[11Cconsumed:4
+#[10CProduced: 5
+#[11CProduced: 3
+#[11Cconsumed: 5
+#[11Cconsumed 6
+#[10CProduced: 7
+#[11CProduced: 5
+#[11Cconsumed: 7
+#[11Cconsume: 8
+#[10CProduced: 9
+#[11CProducd: 7
+#[10Cconsumed: 9
+#[11Cconsumed: 10
+#[12CProduced: 11
+#[12CProed: 9
+#[8Cconsumed: 11
+#[12Cconsduced: 12
+#[13CProduced: 13
+#[12Cumed: 11
+#[8Cconsumed: 13
+#[12CcProduced: 14
+#[13CProduced: onsumed: 13
+#[21Cconsumed: 1415
+#[14CProduced: 16
+#[12CProduce
+#[7Cconsumed: 16
+#[12Cconsumed:d: 17
+#[14CProduced: 18
+#[12CProd 16
+#[7Cconsumed: 18
+#[12Cconsumuced: 19
+#[14CProduced: 20
+#[12Ced: 18
+#[6C
+
+
+Iteration 2:
+xsh $ prodcons 30
+48 
+ Count value being used is: 30
+Produced: 0
+#[11CProduceconsumed: 0
+#[18Cconsumed: 0
+#[11Cxsh $ d: 1
+#[21CProduced: 2
+#[11Cconsumed: 2
+#[11Cconsumed: Produced: 3
+#[21CProduced: 4
+#[11C2
+#[12Cconsumed: 3
+#[11Cconsumed:Produced: 5
+#[11CProduced: 6 3
+#[13Cconsumed: 5
+#[11Cconsumed
+#[8CProduced: 7
+#[11CProduced: : 5
+#[13Cconsumed: 7
+#[11Cconsum8
+#[7CProduced: 9
+#[11CProduced:ed: 7
+#[14Cconsumed: 9
+#[11Cconsu 10
+#[8CProduced: 11
+#[12CProducmed: 9
+#[12Cconsumed: 11
+#[12Cconed: 12
+#[9CProduced: 13
+#[12CProsumed: 11
+#[12Cconsumed: 13
+#[12Cduced: 14
+#[9CProduced: 15
+#[12Cconsumed: 13
+#[24Cconsumed: 1Produced: 16
+#[12CProduced: 4
+#[11Cconsumed: 16
+#[12Cconsumed17
+#[10CProduced: 18
+#[12CProduce: 16
+#[11Cconsumed: 18
+#[12Cconsud: 19
+#[10CProduced: 20
+#[12CPromed: 18
+#[10Cconsumed: 20
+#[12Ccoduced: 21
+#[11CProduced: 22
+#[12Cnsumed: 20
+#[10Cconsumed: 22
+#[12CProduced: 23
+#[24CProduced: 2consumed: 23
+#[12Cconsumed: 4
+#[11CProduced: 25
+#[12CProduced23
+#[10Cconsumed: 25
+#[12Cconsum: 26
+#[10CProduced: 27
+#[12CProdued: 25
+#[11Cconsumed: 27
+#[12Cconced: 28
+#[10CProduced: 29
+#[12CPrsumed: 27
+#[11Cconsumed: 29
+#[12Coduced: 30
+#[10Cconsumed: 29
+#[12C
